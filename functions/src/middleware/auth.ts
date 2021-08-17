@@ -1,7 +1,9 @@
+import { Request, Response, NextFunction } from "express";
+
 import admin from "../config/admin";
 import { asyncWrap } from "./async";
 
-export const validateAuth = asyncWrap(async (req, res, next) => {
+export const isAuthenticated = asyncWrap(async (req, res, next) => {
 	if ((!req.headers.authorization || !req.headers.authorization.startsWith("Bearer ")) && !(req.cookies && req.cookies.__session)) {
 		res.status(403).send("Unauthorized");
 		return;
@@ -28,3 +30,7 @@ export const validateAuth = asyncWrap(async (req, res, next) => {
 		return;
 	}
 });
+
+export const isAuthorized = (req: Request, res: Response, next: NextFunction) => {
+	// TODO: check for roles and authorize
+};
