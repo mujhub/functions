@@ -1,21 +1,25 @@
 import * as express from "express";
 
-import { validateAuth } from "../middlewares/auth";
-
-import outletsRoutes from "../routes/outlets";
+import outletsRoutes from "./eateries";
 import itemsRoutes from "../routes/items";
 import ordersRoutes from "../routes/orders";
 
+import { ErrorHandler, throwError } from "../helpers/ErrorHandler";
+
 const router = express.Router();
 
-router.use(validateAuth);
-
 router.get("/", (req, res) => {
-	res.send("Hello");
+	res.send("Welcome to MUJ HUB");
 });
 
-router.use("/outlet", outletsRoutes);
-router.use("/item", itemsRoutes);
-router.use("/order", ordersRoutes);
+router.use("/eateries", outletsRoutes);
+router.use("/items", itemsRoutes);
+router.use("/orders", ordersRoutes);
+
+router.use("/error", (req, res, next) => {
+	throwError(500, "Internal");
+});
+
+router.use(ErrorHandler);
 
 export default router;
