@@ -1,9 +1,12 @@
 import * as functions from "firebase-functions";
+import * as express from "express";
+import * as bodyParser from "body-parser";
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-export const helloWorld = functions.https.onRequest((request, response) => {
-	functions.logger.info("Hello logs!", { structuredData: true });
-	response.send("Hello from Firebase!");
-});
+import v1 from "./routes/index";
+
+const main = express();
+
+main.use("/v1", v1);
+main.use(bodyParser.json());
+
+export const api = functions.https.onRequest(main);
