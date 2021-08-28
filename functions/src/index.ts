@@ -1,8 +1,8 @@
 import * as functions from "firebase-functions";
-import * as express from "express";
+import express from "express";
 import * as bodyParser from "body-parser";
-import * as cookieParser from "cookie-parser";
-import * as cors from "cors";
+import cookieParser from "cookie-parser";
+import cors from "cors";
 
 import v1 from "./routes/index";
 

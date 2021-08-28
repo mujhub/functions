@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
+import ApiResponse from "../types/ApiResponse";
 
-class CustomError extends Error {
+export class CustomError extends Error {
 	statusCode: any;
 	constructor(statusCode: number, message: string) {
 		super(message);
@@ -14,5 +15,13 @@ export const throwError = (code: number, message: string) => {
 };
 
 export const ErrorHandler = (err: CustomError, req: Request, res: Response, next: NextFunction) => {
-	res.status(err.statusCode).json({ status: "error", message: err.message });
+	const response: ApiResponse = {
+		status: err.statusCode,
+		success: false,
+		message: err.message
+	}
+
+	console.log(err);
+
+	res.status(err.statusCode).json(response);
 };
