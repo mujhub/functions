@@ -8,7 +8,8 @@ import generateOrderId from "../helpers/OrderId";
 
 export const addOrder = asyncWrap(async (req, res) => {
 	try {
-
+    // @ts-ignore
+    // console.log(req.locals);
     const newOrder = req.body as Order;
     const orderId = generateOrderId();
 
@@ -44,6 +45,56 @@ export const getOrderByID = asyncWrap(async (req, res) => {
       success: true,
       message: "FOUND",
       data: order.data() as Order
+    }
+
+    res.status(200).json(response);
+  } catch (error) {
+    if (error instanceof CustomError)
+      throwError(error.statusCode, error.message);
+    throwError(500, "INTERNAL SERVER ERROR");
+  }
+});
+
+export const getOrdersByUserID = asyncWrap(async (req, res) => {
+  try {
+    const { id } = req.params;
+    const queryResult = await db.collection("orders").where("user", "==", id).get();
+
+    const orders = queryResult.docs.map((doc) => doc.data() as Order)
+    
+    const response: ApiResponse = {
+      status: 200,
+      success: true,
+      message: "SUCCESS",
+      data: {
+        length: orders.length,
+        orders: orders,
+      }
+    }
+
+    res.status(200).json(response);
+  } catch (error) {
+    if (error instanceof CustomError)
+      throwError(error.statusCode, error.message);
+    throwError(500, "INTERNAL SERVER ERROR");
+  }
+});
+
+export const getOrdersByShopID = asyncWrap(async (req, res) => {
+  try {
+    const { id } = req.params;
+    const queryResult = await db.collection("orders").where("shop", "==", id).get();
+
+    const orders = queryResult.docs.map((doc) => doc.data() as Order)
+    
+    const response: ApiResponse = {
+      status: 200,
+      success: true,
+      message: "SUCCESS",
+      data: {
+        length: orders.length,
+        orders: orders,
+      }
     }
 
     res.status(200).json(response);
