@@ -1,10 +1,11 @@
 import * as express from "express";
 
-import outletsRoutes from "./eateries";
-import itemsRoutes from "../routes/items";
-import ordersRoutes from "../routes/orders";
+import { isAuthenticated } from "../middleware/auth";
+import { ErrorHandler } from "../helpers/ErrorHandler";
 
-import { ErrorHandler, throwError } from "../helpers/ErrorHandler";
+import itemsRoutes from "./items";
+import ordersRoutes from "./orders";
+import outletsRoutes from "./eateries";
 
 const router = express.Router();
 
@@ -14,11 +15,7 @@ router.get("/", (req, res) => {
 
 router.use("/eateries", outletsRoutes);
 router.use("/items", itemsRoutes);
-router.use("/orders", ordersRoutes);
-
-router.use("/error", (req, res, next) => {
-	throwError(500, "Internal");
-});
+router.use("/orders", isAuthenticated, ordersRoutes);
 
 router.use(ErrorHandler);
 

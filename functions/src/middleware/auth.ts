@@ -3,8 +3,8 @@ import { Request, Response, NextFunction } from "express";
 import admin from "../config/admin";
 import { asyncWrap } from "./async";
 
-import { IRoles } from "../interfaces/auth.interfaces";
-import { ADMIN_EMAIL } from "../config/config";
+import { Roles } from "../interfaces/auth.interfaces";
+// import { ADMIN_EMAIL } from "../config/config";
 import { throwError } from "../helpers/ErrorHandler";
 
 export const isAuthenticated = asyncWrap(async (req, res, next) => {
@@ -36,21 +36,22 @@ export const isAuthenticated = asyncWrap(async (req, res, next) => {
 	}
 });
 
-export const isAuthorized = (opts: { param: string; hasRole: Array<IRoles>; allowSelfOnly?: boolean }) => {
-	return (req: Request, res: Response, next: NextFunction) => {
-		const { role, email, uid } = res.locals;
-		const param = req.params[opts.param];
+export const isAuthorized = (opts: { param?: string; hasRole: Array<Roles>; allowSelfOnly?: boolean }) => {
+	return (req: Request, _: Response, next: NextFunction) => {
+		// @ts-ignore
+		const { role, email, uid } = req.locals;
+		const param = opts.param ? req.params[opts.param] : null;
 
-		if (email === ADMIN_EMAIL) {
-			return next();
-		}
+		console.log(param);
+
+		// if (email === ADMIN_EMAIL) return next();
+
+		if (!role) throwError(403, "Unauthorized");
 
 		if (opts.allowSelfOnly && param && uid === param) return next();
 
-		if (!role) return res.status(403).send();
+		if (!opts.allowSelfOnly && opts.hasRole.includes(role)) return next();
 
-		if (opts.hasRole.includes(role)) return next();
-
-		return res.status(403).send();
+		throwError(403, "Unauthorized");
 	};
 };

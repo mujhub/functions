@@ -1,3 +1,1 @@
-export interface IRoles {
-	role: "admin" | "owner" | "user";
-}
+export type Roles = "admin" | "owner" | "user";

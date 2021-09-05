@@ -1,6 +1,6 @@
 type OrderItem = {
-  itemId: string
-  variants: Array<number>
-}
+	itemId: string;
+	variants: Array<number>;
+};
 
 export default OrderItem;
