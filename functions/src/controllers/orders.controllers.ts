@@ -108,7 +108,7 @@ export const getOrdersByUserID = asyncWrap(async (req, res) => {
 		const { id } = req.params;
 		const queryResult = await db.collection("orders").where("user", "==", id).get();
 
-		const orders = queryResult.docs.map((doc) => doc.data() as Order);
+		const orders = queryResult.docs.map((doc) => ({ ...(doc.data() as Order), oid: doc.id }));
 
 		const response: ApiResponse = {
 			status: 200,
