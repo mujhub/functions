@@ -1,6 +1,7 @@
 import db from "../config/db";
 import { asyncWrap } from "../middleware/async";
 import { throwError } from "../helpers/ErrorHandler";
+import ApiResponse from "../types/ApiResponse";
 
 export const getAllEateries = asyncWrap(async (req, res) => {
 	try {
@@ -18,11 +19,19 @@ export const getAllEateries = asyncWrap(async (req, res) => {
 export const getEateryBySlug = asyncWrap(async (req, res) => {
 	let slug = req.params.slug;
 	try {
-		const EateryDoc = await db.collection("eateries").doc(slug).get();
-		if (EateryDoc.exists) {
-			const eateryData = EateryDoc.data();
-			res.json(eateryData);
-		} else throwError(404, "Eatery not found");
+		const eateryDoc = await db.collection("eateries").doc(slug).get();
+		if (!eateryDoc.exists) throwError(404, "Eatery not found");
+
+		const eateryData = eateryDoc.data();
+
+		const response: ApiResponse = {
+			status: 200,
+			success: true,
+			message: "FOUND",
+			data: eateryData,
+		};
+
+		res.status(201).json(response);
 	} catch (error) {
 		throwError(400, error);
 	}
