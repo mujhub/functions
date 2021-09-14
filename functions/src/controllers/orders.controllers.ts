@@ -16,7 +16,8 @@ export const addOrder = asyncWrap(async (req, res) => {
 	try {
 		// @ts-ignore
 		const { uid } = req.locals;
-		const { items, shop } = req.body;
+		const { items, shop, block } = req.body;
+		const token = req.body.token;
 
 		if (!shop || !items.length) throwError(400, "Invalid Request");
 
@@ -57,7 +58,7 @@ export const addOrder = asyncWrap(async (req, res) => {
 			throwError(400, "Invalid Request");
 		}
 
-		let newOrder = { user: uid, status: OrderStatus.PLACED, createdAt: Date.now(), items: orderedMenu, shop, shopName } as Order;
+		let newOrder = { user: uid, status: OrderStatus.PLACED, createdAt: Date.now(), items: orderedMenu, shop, shopName, block, token } as Order;
 
 		const orderId = generateOrderId();
 

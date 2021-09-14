@@ -8,6 +8,8 @@ type Order = {
 	shopName: string;
 	status: OrderStatus;
 	items: Array<ReceiptItem>;
+	block: string;
+	token: string;
 };
 
 export default Order;
