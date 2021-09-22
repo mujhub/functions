@@ -15,7 +15,7 @@ import ReceiptItem from "../types/ReceiptItem";
 export const addOrder = asyncWrap(async (req, res) => {
 	try {
 		// @ts-ignore
-		const { uid } = req.locals;
+		const { uid, name, phone_number } = req.locals;
 		const { items, shop, block } = req.body;
 		const token = req.body.token;
 
@@ -58,7 +58,7 @@ export const addOrder = asyncWrap(async (req, res) => {
 			throwError(400, "Invalid Request");
 		}
 
-		let newOrder = { user: uid, status: OrderStatus.PLACED, createdAt: Date.now(), items: orderedMenu, shop, shopName, block, token } as Order;
+		let newOrder = { user: uid, status: OrderStatus.PLACED, createdAt: Date.now(), items: orderedMenu, shop, shopName, block, token, name, phoneNo: phone_number } as Order;
 
 		const orderId = generateOrderId();
 

@@ -33,6 +33,6 @@ export const getEateryBySlug = asyncWrap(async (req, res) => {
 
 		res.status(201).json(response);
 	} catch (error) {
-		throwError(400, error);
+		throwError(400, 'error');
 	}
 });

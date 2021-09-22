@@ -10,6 +10,8 @@ type Order = {
 	items: Array<ReceiptItem>;
 	block: string;
 	token: string;
+	name: string,
+	phoneNo: number;
 };
 
 export default Order;

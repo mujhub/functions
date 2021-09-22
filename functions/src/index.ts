@@ -55,15 +55,17 @@ export const updateOrder = functions.firestore.document("orders/{document}").onU
         },
     };
 
-    admin
-        .messaging()
-        .sendToDevice(res.after.data().token, payload)
-        .then(function (response) {
-            console.log("Notification sent successfully:", response);
-        })
-        .catch(function (error) {
-            console.log("Notification sent failed:", error);
-        });
+    if (res.after.data().status === "ACCEPTED") {
+        admin
+            .messaging()
+            .sendToDevice(res.after.data().token, payload)
+            .then(function (response) {
+                console.log("Notification sent successfully:", response);
+            })
+            .catch(function (error) {
+                console.log("Notification sent failed:", error);
+            });
+    }
 })
 
 //Mess Menu Updation
