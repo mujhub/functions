@@ -36,3 +36,26 @@ export const getEateryBySlug = asyncWrap(async (req, res) => {
 		throwError(400, 'error');
 	}
 });
+
+export const saveEateryOwners = asyncWrap(async(req,res) => {
+	
+	let {uid,eaterySlug,registered} = req.body;
+
+	console.log(req.body,"body");
+
+	let newOwner = {slug:eaterySlug,registered};
+
+	try{
+		await db.collection("owners").doc(uid).set(newOwner);
+
+		const response:ApiResponse = {
+			status:200,
+			success:true,
+			message:"Saved Eatery Owner"
+		}
+
+		res.status(200).json(response);
+	}catch(error) {
+		throwError(400,"Couldnt save eatery owner");
+	}
+})
