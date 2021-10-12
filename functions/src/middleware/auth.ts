@@ -4,7 +4,6 @@ import admin from "../config/admin";
 import { asyncWrap } from "./async";
 
 import { Roles } from "../interfaces/auth.interfaces";
-// import { ADMIN_EMAIL } from "../config/config";
 import { throwError } from "../helpers/ErrorHandler";
 
 export const isAuthenticated = asyncWrap(async (req, res, next) => {
