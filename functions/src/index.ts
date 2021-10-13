@@ -94,3 +94,27 @@ export const messMenuUpdate = functions.firestore.document("mess/menuData").onUp
 			console.log("Notification sent failed:", error);
 		});
 });
+
+export const resetMessData = functions.pubsub
+	.schedule("0 0 * * *")
+	.timeZone("Asia/Kolkata")
+	.onRun(async () => {
+		const menuData = await admin.firestore().collection("mess").doc("menuData").get();
+		if (menuData.exists) {
+			try {
+				const data = menuData.data();
+				if (data) {
+					let meals = data.meals;
+					meals.forEach((meal: any) => {
+						meal.menu = [];
+						meal.isSpecial = false;
+					});
+					data.meals = meals;
+					admin.firestore().collection("mess").doc("menuData").update(data);
+					console.log("Cleared Mess Menu");
+				}
+			} catch (error) {
+				console.log(JSON.stringify(error));
+			}
+		}
+	});
