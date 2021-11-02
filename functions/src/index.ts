@@ -118,3 +118,75 @@ export const resetMessData = functions.pubsub
 			}
 		}
 	});
+
+export const changeMessSaturdayTimings = functions.pubsub
+	.schedule("0 0 * * 6")
+	.timeZone("Asia/Kolkata")
+	.onRun(async () => {
+		const menuData = await admin.firestore().collection("mess").doc("menuData").get();
+		if (menuData.exists) {
+			try {
+				const data = menuData.data();
+				if (data) {
+					let meals = data.meals;
+					if (meals[0]) {
+						meals[0].startsAt = "07:30";
+						meals[0].endsAt = "10:30";
+					}
+					if (meals[1]) {
+						meals[1].startsAt = "12:00";
+						meals[1].endsAt = "15:30";
+					}
+					if (meals[2]) {
+						meals[2].startsAt = "17:30";
+						meals[2].endsAt = "18:30";
+					}
+					if (meals[3]) {
+						meals[3].startsAt = "19:30";
+						meals[3].endsAt = "21:30";
+					}
+					data.meals = meals;
+					admin.firestore().collection("mess").doc("menuData").update(data);
+					console.log("Changed Timings on Saturday");
+				}
+			} catch (error) {
+				console.log(JSON.stringify(error));
+			}
+		}
+	});
+
+export const changeMessMondayTimings = functions.pubsub
+	.schedule("0 0 * * 1")
+	.timeZone("Asia/Kolkata")
+	.onRun(async () => {
+		const menuData = await admin.firestore().collection("mess").doc("menuData").get();
+		if (menuData.exists) {
+			try {
+				const data = menuData.data();
+				if (data) {
+					let meals = data.meals;
+					if (meals[0]) {
+						meals[0].startsAt = "07:30";
+						meals[0].endsAt = "09:30";
+					}
+					if (meals[1]) {
+						meals[1].startsAt = "12:00";
+						meals[1].endsAt = "14:30";
+					}
+					if (meals[2]) {
+						meals[2].startsAt = "17:30";
+						meals[2].endsAt = "18:30";
+					}
+					if (meals[3]) {
+						meals[3].startsAt = "19:30";
+						meals[3].endsAt = "21:30";
+					}
+					data.meals = meals;
+					admin.firestore().collection("mess").doc("menuData").update(data);
+					console.log("Changed Timings on Monday");
+				}
+			} catch (error) {
+				console.log(JSON.stringify(error));
+			}
+		}
+	});
