@@ -5,6 +5,7 @@ import { asyncWrap } from "./async";
 
 import { Roles } from "../interfaces/auth.interfaces";
 import { throwError } from "../helpers/ErrorHandler";
+import { ADMIN_EMAIL } from "../config/config";
 
 export const isAuthenticated = asyncWrap(async (req, res, next) => {
 	if ((!req.headers.authorization || !req.headers.authorization.startsWith("Bearer ")) && !(req.cookies && req.cookies.__session)) {
@@ -43,7 +44,7 @@ export const isAuthorized = (opts: { param?: string; hasRole: Array<Roles>; allo
 
 		console.log(param);
 
-		// if (email === ADMIN_EMAIL) return next();
+		if (email === ADMIN_EMAIL) return next();
 
 		if (!role) throwError(403, "Unauthorized");
 
