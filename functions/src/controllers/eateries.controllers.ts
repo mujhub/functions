@@ -111,3 +111,51 @@ export const setEateryInfo = asyncWrap(async (req, res) => {
 		throwError(400, "error");
 	}
 });
+
+export const setEateryStatus = asyncWrap(async (req, res) => {
+	let slug = req.params.slug;
+	try {
+		const eateryRef = db.collection("eateries").doc(slug);
+		const eateryDoc = await eateryRef.get();
+		if (!eateryDoc.exists) throwError(404, "Eatery not found");
+		const eateryData = eateryDoc.data();
+
+		const infoRef = db.collection("eateries").doc("info-data");
+		const infoDoc = await infoRef.get();
+		if (!infoDoc.exists) throwError(404, "Eateries info not found");
+
+		try {
+			if (!eateryData) {
+				throwError(404, "Eatery data not found");
+				return;
+			}
+			if (!eateryData.info) {
+				throwError(404, "Eatery info not found");
+				return;
+			}
+			if (typeof req.body.is_open !== "boolean") {
+				throwError(500, "Bad request");
+				return;
+			}
+
+			let is_open = req.body.is_open;
+
+			await eateryRef.update({ info: { is_open } });
+			await infoRef.update({ [slug]: { is_open } });
+		} catch (error) {
+			console.log(error);
+			throwError(500, "Something went wrong");
+		}
+
+		const response: ApiResponse = {
+			status: 200,
+			success: true,
+			message: "SUCCESS",
+		};
+
+		res.status(200).json(response);
+	} catch (error) {
+		console.log(error);
+		throwError(400, "error");
+	}
+});
