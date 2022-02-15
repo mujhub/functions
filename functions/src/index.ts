@@ -121,6 +121,7 @@ export const resetMessData = functions.pubsub
 						meal.isSpecial = false;
 					});
 					data.meals = meals;
+					data.notify = false;
 					admin.firestore().collection("mess").doc("menuData").update(data);
 					console.log("Cleared Mess Menu");
 				}
@@ -157,6 +158,7 @@ export const changeMessSaturdayTimings = functions.pubsub
 						meals[3].endsAt = "21:30";
 					}
 					data.meals = meals;
+					data.notify = false;
 					admin.firestore().collection("mess").doc("menuData").update(data);
 					console.log("Changed Timings on Saturday");
 				}
@@ -193,6 +195,7 @@ export const changeMessMondayTimings = functions.pubsub
 						meals[3].endsAt = "21:30";
 					}
 					data.meals = meals;
+					data.notify = false;
 					admin.firestore().collection("mess").doc("menuData").update(data);
 					console.log("Changed Timings on Monday");
 				}
